@@ -64,7 +64,6 @@ enum PokemonSummaryScreenSkillPageMode
 {
     PSS_SKILL_PAGE_STATS,
     PSS_SKILL_PAGE_IVS,
-    PSS_SKILL_PAGE_EVS,
     PSS_SKILL_PAGE_MODE_COUNT
 };
 
