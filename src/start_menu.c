@@ -314,72 +314,8 @@ static void DestroySafariZoneStatsWindow(void)
 
 #define tCounter data[0]
 
-static void Task_UpdateTimeWindow(u8 taskId)
-{
-    if (gTasks[taskId].tCounter < 60)
-    {
-        gTasks[taskId].tCounter++;
-        return;
-    }
-
-    if (IsDma3ManagerBusyWithBgCopy())
-        return;
-
-    DrawStdWindowFrame(sTimeWindowId, FALSE);
-    ConvertIntToDecimalStringN(gStringVar1, GetCurrentHour(), STR_CONV_MODE_RIGHT_ALIGN, 3);
-    ConvertIntToDecimalStringN(gStringVar2, GetCurrentMinute(), STR_CONV_MODE_LEADING_ZEROS, 2);
-    StringExpandPlaceholders(gStringVar4, gText_MenuTime);
-    AddTextPrinterParameterized(sTimeWindowId, FONT_NORMAL, gStringVar4, 4, 1, 0xFF, NULL);
-
-    StringCopy(gStringVar1, GetSeasonName(GetSeason()));
-    ConvertIntToDecimalStringN(gStringVar2, GetSeasonDay(), STR_CONV_MODE_RIGHT_ALIGN, 2);
-    StringExpandPlaceholders(gStringVar4, gText_MenuDay);
-    AddTextPrinterParameterized(sTimeWindowId, FONT_NORMAL, gStringVar4, 4, 18, 0xFF, NULL);
-    
-    CopyWindowToVram(sTimeWindowId, COPYWIN_GFX);
-    gTasks[taskId].tCounter = 0;
-}
-
-static void DrawTimeWindow(void)
-{
-    if (GetSafariZoneFlag())
-        sTimeWindowId = AddWindow(&sTimeSafariWindowTemplate);
-    else
-        sTimeWindowId = AddWindow(&sTimeWindowTemplate);
-    
-    PutWindowTilemap(sTimeWindowId);
-    DrawStdWindowFrame(sTimeWindowId, FALSE);
-    ConvertIntToDecimalStringN(gStringVar1, GetCurrentHour(), STR_CONV_MODE_RIGHT_ALIGN, 3);
-    ConvertIntToDecimalStringN(gStringVar2, GetCurrentMinute(), STR_CONV_MODE_LEADING_ZEROS, 2);
-    StringExpandPlaceholders(gStringVar4, gText_MenuTime);
-    AddTextPrinterParameterized(sTimeWindowId, FONT_NORMAL, gStringVar4, 4, 1, 0xFF, NULL);
-
-    StringCopy(gStringVar1, GetSeasonName(GetSeason()));
-    ConvertIntToDecimalStringN(gStringVar2, GetSeasonDay(), STR_CONV_MODE_RIGHT_ALIGN, 2);
-    StringExpandPlaceholders(gStringVar4, gText_MenuDay);
-    AddTextPrinterParameterized(sTimeWindowId, FONT_NORMAL, gStringVar4, 4, 18, 0xFF, NULL);
-
-    CopyWindowToVram(sTimeWindowId, COPYWIN_GFX);
-
-    u8 taskId = CreateTask(Task_UpdateTimeWindow, 0);
-    gTasks[taskId].tCounter = 0;
-}
-
 #undef tCounter
 
-static void DestroyTimeWindow(void)
-{
-    u8 taskId = FindTaskIdByFunc(Task_UpdateTimeWindow);
-    if (taskId != TASK_NONE)
-        DestroyTask(taskId);
-    
-    if (sTimeWindowId == WINDOW_NONE)
-        return;
-
-    ClearStdWindowAndFrameToTransparent(sTimeWindowId, FALSE);
-    CopyWindowToVram(sTimeWindowId, COPYWIN_FULL);
-    RemoveWindow(sTimeWindowId);
-    sTimeWindowId = WINDOW_NONE;
 }
 
 static s8 PrintStartMenuItems(s8 *cursor_p, u8 nitems)
@@ -429,14 +365,10 @@ static s8 DoDrawStartMenu(void)
         sDrawStartMenuState[0]++;
         break;
     case 4:
-        DrawTimeWindow();
-        sDrawStartMenuState[0]++;
-        break;
-    case 5:
         if (PrintStartMenuItems(&sDrawStartMenuState[1], 2) == TRUE)
             sDrawStartMenuState[0]++;
         break;
-    case 6:
+    case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 0, 15, sNumStartMenuItems, sStartMenuCursorPos);
         if (DEBUG_OVERWORLD_MENU != TRUE && !MenuHelpers_IsLinkActive() && InUnionRoom() != TRUE && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_HELP)
             DrawHelpMessageWindowWithText(sStartMenuDescPointers[sStartMenuOrder[sStartMenuCursorPos]]);
@@ -544,7 +476,7 @@ static bool8 StartCB_HandleInput(void)
     if (JOY_NEW(B_BUTTON | START_BUTTON))
     {
         DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
+        
         if (DEBUG_OVERWORLD_MENU != TRUE)
             DestroyHelpMessageWindow_();
         CloseStartMenu();
@@ -579,7 +511,6 @@ static bool8 StartMenuPokedexCallback(void)
         IncrementGameStat(GAME_STAT_CHECKED_POKEDEX);
         PlayRainStoppingSoundEffect();
         DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
         CleanupOverworldWindowsAndTilemaps();
         SetMainCallback2(CB2_OpenPokedexFromStartMenu);
         return TRUE;
@@ -592,8 +523,7 @@ static bool8 StartMenuPokemonCallback(void)
     if (!gPaletteFade.active)
     {
         PlayRainStoppingSoundEffect();
-        DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
+        DestroySafariZoneStatsWindow();    
         CleanupOverworldWindowsAndTilemaps();
         SetMainCallback2(CB2_PartyMenuFromStartMenu);
         return TRUE;
@@ -606,8 +536,7 @@ static bool8 StartMenuBagCallback(void)
     if (!gPaletteFade.active)
     {
         PlayRainStoppingSoundEffect();
-        DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
+        DestroySafariZoneStatsWindow();    
         CleanupOverworldWindowsAndTilemaps();
         SetMainCallback2(CB2_BagMenuFromStartMenu);
         return TRUE;
@@ -620,8 +549,7 @@ static bool8 StartMenuPlayerCallback(void)
     if (!gPaletteFade.active)
     {
         PlayRainStoppingSoundEffect();
-        DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
+        DestroySafariZoneStatsWindow();        
         CleanupOverworldWindowsAndTilemaps();
         ShowPlayerTrainerCard(CB2_ReturnToFieldWithOpenMenu);
         return TRUE;
@@ -640,8 +568,7 @@ static bool8 StartMenuOptionCallback(void)
     if (!gPaletteFade.active)
     {
         PlayRainStoppingSoundEffect();
-        DestroySafariZoneStatsWindow();
-        DestroyTimeWindow();
+        DestroySafariZoneStatsWindow();        
         CleanupOverworldWindowsAndTilemaps();
         SetMainCallback2(CB2_OptionsMenuFromStartMenu);
         gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
@@ -652,8 +579,7 @@ static bool8 StartMenuOptionCallback(void)
 
 static bool8 StartMenuExitCallback(void)
 {
-    DestroySafariZoneStatsWindow();
-    DestroyTimeWindow();
+    DestroySafariZoneStatsWindow();    
     if (DEBUG_OVERWORLD_MENU != TRUE)
         DestroyHelpMessageWindow_();
     CloseStartMenu();
@@ -662,8 +588,7 @@ static bool8 StartMenuExitCallback(void)
 
 static bool8 StartMenuDebugCallback(void)
 {
-    DestroySafariZoneStatsWindow();
-    DestroyTimeWindow();
+    DestroySafariZoneStatsWindow();    
     HideStartMenuDebug(); // Hide start menu without enabling movement
 
     if (DEBUG_OVERWORLD_MENU == TRUE)
@@ -676,8 +601,7 @@ static bool8 StartMenuDebugCallback(void)
 
 static bool8 StartMenuSafariZoneRetireCallback(void)
 {
-    DestroySafariZoneStatsWindow();
-    DestroyTimeWindow();
+    DestroySafariZoneStatsWindow();    
     if (DEBUG_OVERWORLD_MENU != TRUE)
         DestroyHelpMessageWindow_();
     CloseStartMenu();
@@ -849,8 +773,7 @@ static bool8 SaveDialog_Wait60FramesThenCheckAButtonHeld(void)
 static u8 SaveDialogCB_PrintAskSaveText(void)
 {
     ClearStdWindowAndFrame(GetStartMenuWindowId(), FALSE);
-    RemoveStartMenuWindow();
-    DestroyTimeWindow();
+    RemoveStartMenuWindow();    
     if (DEBUG_OVERWORLD_MENU != TRUE)
         DestroyHelpMessageWindow(0);
     PrintSaveStats();
