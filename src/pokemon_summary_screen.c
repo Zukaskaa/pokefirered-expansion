@@ -2372,34 +2372,12 @@ static void BufferEVString(u8 stat)
         ApplyNatureColor(dst, stat);
 }
 
-static const u8 sText_JudgeNoGood[] = _("No good");
-static const u8 sText_JudgeDecent[] = _("Decent");
-static const u8 sText_JudgePrettyGood[] = _("Pretty good");
-static const u8 sText_JudgeVeryGood[] = _("Very good");
-static const u8 sText_JudgeFantastic[] = _("Fantastic");
-static const u8 sText_JudgeBest[] = _("Best");
-static const u8 sText_JudgeHyperTrained[] = _("Hyper trained!");
-
 static void BufferIVString(u8 stat)
 {
-    bool8 isHyperTrained = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataHyperTrained);
-    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
+    
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
-
-    if (isHyperTrained)
-        StringCopy(dst, sText_JudgeHyperTrained);
-    else if (statValue == 31)
-        StringCopy(dst, sText_JudgeBest);
-    else if (statValue == 30)
-        StringCopy(dst, sText_JudgeFantastic);
-    else if (statValue > 25)
-        StringCopy(dst, sText_JudgeVeryGood);
-    else if (statValue > 15)
-        StringCopy(dst, sText_JudgePrettyGood);
-    else if (statValue > 0)
-        StringCopy(dst, sText_JudgeDecent);
-    else
-        StringCopy(dst, sText_JudgeNoGood);
+    
+    GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
 
     SetStatXPos(stat, 0);
     if (stat != STAT_HP)
@@ -2415,9 +2393,6 @@ static void BufferStat(u8 stat)
             break;
         case PSS_SKILL_PAGE_IVS:
             BufferIVString(stat);
-            break;
-        case PSS_SKILL_PAGE_EVS:
-            BufferEVString(stat);
             break;
     }
 }
