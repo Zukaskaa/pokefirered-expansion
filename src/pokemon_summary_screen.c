@@ -2357,27 +2357,145 @@ static void BufferStatString(u8 stat)
         ApplyNatureColor(dst, stat);
 }
 
-static void BufferEVString(u8 stat)
-{
-    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataEv);
-    u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
-    u8 tmp[20];
-    
-    ConvertIntToDecimalStringN(dst, statValue, STR_CONV_MODE_LEFT_ALIGN, 3);
-    StringAppend(dst, gText_Slash);
-    ConvertIntToDecimalStringN(tmp, MAX_PER_STAT_EVS, STR_CONV_MODE_LEFT_ALIGN, 3);
-    StringAppend(dst, tmp);
-    SetStatXPos(stat, GetNumberRightAlign63(dst));
-    if (stat != STAT_HP)
-        ApplyNatureColor(dst, stat);
-}
+static const u8 sText_IV0[] = _("0");
+static const u8 sText_IV1[] = _("1");
+static const u8 sText_IV2[] = _("2");
+static const u8 sText_IV3[] = _("3");
+static const u8 sText_IV4[] = _("4");
+static const u8 sText_IV5[] = _("5");
+static const u8 sText_IV6[] = _("6");
+static const u8 sText_IV7[] = _("7");
+static const u8 sText_IV8[] = _("8");
+static const u8 sText_IV9[] = _("9");
+static const u8 sText_IV10[] = _("10");
+static const u8 sText_IV11[] = _("11");
+static const u8 sText_IV12[] = _("12");
+static const u8 sText_IV13[] = _("13");
+static const u8 sText_IV14[] = _("14");
+static const u8 sText_IV15[] = _("15");
+static const u8 sText_IV16[] = _("16");
+static const u8 sText_IV17[] = _("17");
+static const u8 sText_IV18[] = _("18");
+static const u8 sText_IV19[] = _("19");
+static const u8 sText_IV20[] = _("20");
+static const u8 sText_IV21[] = _("21");
+static const u8 sText_IV22[] = _("22");
+static const u8 sText_IV23[] = _("23");
+static const u8 sText_IV24[] = _("24");
+static const u8 sText_IV25[] = _("25");
+static const u8 sText_IV26[] = _("26");
+static const u8 sText_IV27[] = _("27");
+static const u8 sText_IV28[] = _("28");
+static const u8 sText_IV29[] = _("29");
+static const u8 sText_IV30[] = _("30");
+static const u8 sText_IV31[] = _("31");
+
 
 static void BufferIVString(u8 stat)
 {
-    
+    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
-    
-    GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
+
+    switch(statValue){
+
+        case 0:
+            StringCopy(dst, sText_IV0);
+            break;
+        case 1:
+            StringCopy(dst, sText_IV1);
+            break;
+        case 2:
+            StringCopy(dst, sText_IV2);
+            break;
+        case 3:
+            StringCopy(dst, sText_IV3);
+            break;
+        case 4:
+            StringCopy(dst, sText_IV4);
+            break;
+        case 5:
+            StringCopy(dst, sText_IV5);
+            break;
+        case 6:
+            StringCopy(dst, sText_IV6);
+            break;
+        case 7:
+            StringCopy(dst, sText_IV7);
+            break;
+        case 8:
+            StringCopy(dst, sText_IV8);
+            break;
+        case 9:
+            StringCopy(dst, sText_IV9);
+            break;
+        case 10:
+            StringCopy(dst, sText_IV10);
+            break;
+        case 11:
+            StringCopy(dst, sText_IV11);
+            break;
+        case 12:
+            StringCopy(dst, sText_IV12);
+            break;
+        case 13:
+            StringCopy(dst, sText_IV13);
+            break;
+        case 14:
+            StringCopy(dst, sText_IV14);
+            break;
+        case 15:
+            StringCopy(dst, sText_IV15);
+            break;
+        case 16:
+            StringCopy(dst, sText_IV16);
+            break;
+        case 17:
+            StringCopy(dst, sText_IV17);
+            break;
+        case 18:
+            StringCopy(dst, sText_IV18);
+            break;
+        case 19:
+            StringCopy(dst, sText_IV19);
+            break;
+        case 20:
+            StringCopy(dst, sText_IV20);
+            break;
+        case 21:
+            StringCopy(dst, sText_IV21);
+            break;
+        case 22:
+            StringCopy(dst, sText_IV22);
+            break;
+        case 23:
+            StringCopy(dst, sText_IV23);
+            break;
+        case 24:
+            StringCopy(dst, sText_IV24);
+            break;
+        case 25:
+            StringCopy(dst, sText_IV25);
+            break;
+        case 26:
+            StringCopy(dst, sText_IV26);
+            break;
+        case 27:
+            StringCopy(dst, sText_IV27);
+            break;
+        case 28:
+            StringCopy(dst, sText_IV28);
+            break;
+        case 29:
+            StringCopy(dst, sText_IV29);
+            break;
+        case 30:
+            StringCopy(dst, sText_IV30);
+            break;
+        case 31:
+            StringCopy(dst, sText_IV31);
+            break;
+
+    }
 
     SetStatXPos(stat, 0);
     if (stat != STAT_HP)
